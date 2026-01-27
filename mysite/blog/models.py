@@ -5,6 +5,13 @@ from django.utils import timezone
 # Create your models here.
 
 
+class PublishedManager(models.Manager):
+    """A custom model manager which retrieves all posts that are published."""
+
+    def get_queryset(self):
+        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+
+
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
@@ -13,15 +20,16 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250)
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='blog_posts'
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blog_posts"
     )
     body = models.TextField()
     published = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2, choices=Status, default=Status.DRAFT)
+
+    objects = models.Manager()  # The default model manager
+    publishedObjects = PublishedManager()  # Our custom model manager
 
     class Meta:
         ordering = ["-published"]
@@ -31,3 +39,10 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class FavoritePost(models.Model):
+    pk = models.CompositePrimaryKey("user", "post")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey("blog.Post", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
