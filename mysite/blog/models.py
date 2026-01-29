@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 # Create your models here.
@@ -39,6 +40,12 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def get_absolute_url(self):
+        """A canonical URL is the preferred URL for a resource. You can think
+        of it as the URL of the most representative page for specific
+        content."""
+        return reverse("blog:post_detail", args=[self.id])  # type: ignore
 
 
 class FavoritePost(models.Model):
