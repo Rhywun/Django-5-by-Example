@@ -19,7 +19,7 @@ class Post(models.Model):
         PUBLISHED = "PB", "Published"
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250)
+    slug = models.SlugField(max_length=250, unique_for_date="published")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blog_posts"
     )
@@ -45,7 +45,15 @@ class Post(models.Model):
         """A canonical URL is the preferred URL for a resource. You can think
         of it as the URL of the most representative page for specific
         content."""
-        return reverse("blog:post_detail", args=[self.id])  # type: ignore
+        return reverse(
+            "blog:post_detail",
+            args=[
+                self.published.year,
+                self.published.month,
+                self.published.day,
+                self.slug,
+            ],
+        )
 
 
 class FavoritePost(models.Model):
