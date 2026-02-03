@@ -2,7 +2,7 @@ from django import forms
 
 
 class EmailPostForm(forms.Form):
-    fromName = forms.CharField(max_length=100)
-    fromEmail = forms.EmailField()
-    toEmail = forms.EmailField()
+    your_name = forms.CharField(max_length=100)
+    your_email = forms.EmailField()
+    to_email = forms.EmailField()
     comments = forms.CharField(required=False, widget=forms.Textarea)
