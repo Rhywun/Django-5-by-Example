@@ -62,17 +62,17 @@ def post_share(request: HttpRequest, post_id: int) -> HttpResponse:
             # Send email
             post_url = request.build_absolute_uri(post.get_absolute_url())
             subject = (
-                f"{cd['name']} ({cd['email']}) " f"recommends you read {post.title}"
+                f"{cd['your_name']} ({cd['your_email']}) " f"recommends you read {post.title}"
             )
             message = (
-                f"Read {post.title} at {post_url}\n\n"
-                f"{cd['name']}'s comments: {cd['comments']}"
+                f"Read \"{post.title}\" at {post_url}!\n\n"
+                f"{cd['your_name']}'s comments: {cd['comments']}"
             )
             send_mail(
                 subject=subject,
                 message=message,
                 from_email=None,
-                recipient_list=[cd["to"]],
+                recipient_list=[cd["to_email"]],
             )
             sent = True
     else:
