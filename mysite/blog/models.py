@@ -42,9 +42,11 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        """A canonical URL is the preferred URL for a resource. You can think
+        """
+        A canonical URL is the preferred URL for a resource. You can think
         of it as the URL of the most representative page for specific
-        content."""
+        content.
+        """
         return reverse(
             "blog:post_detail",
             args=[
